@@ -1,4 +1,4 @@
-import { Button, Drawer, Form, Input, InputNumber, Space } from "antd";
+import { Button, Drawer, Form, Input, InputNumber, Select, Space } from "antd";
 import {useFormik, FormikProvider} from "formik"
 import mutateData from "../hooks/mutateData";
 import { useContext, useEffect } from "react";
@@ -95,13 +95,21 @@ const CreateEmployeeDrawer = ({employeeData, onClose, open }) => {
         }} addonAfter="₺" name="maas" type="number" onChange={(e)=> formik.setFieldValue("maas", e)} value={formik.values.maas} />
         </Form.Item>
         <Form.Item htmlFor="medeni_durum" label="Medeni Durum">
-       <Input style={{
+       <Select style={{
         width: '100%'
-       }} name="medeni_durum" type="text" onChange={formik.handleChange} value={formik.values.medeni_durum} />
+       }} name="medeni_durum" options={[{
+        title: "Evli",
+        value: "Evli",
+       },
+       {
+        title: "Bekar",
+        value: "Bekar"
+       }
+       ]}  onChange={(e) => formik.setFieldValue("medeni_durum", e)} value={formik.values.medeni_durum} />
         </Form.Item>
         <Form.Item htmlFor="tel" label="Tel No">
        <Input.OTP length={10} style={{
-        width: "50%"
+      
        }}  name="tel" type="number" onChange={(e) => formik.setFieldValue("tel", e)} value={formik.values.tel} />
         </Form.Item>
         <Form.Item htmlFor="adres" label="Adres">
