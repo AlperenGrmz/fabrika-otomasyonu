@@ -1,9 +1,9 @@
-import { ConfigProvider as AntdProvider, App } from "antd"
+import { ConfigProvider as AntdProvider, App as AntdApp } from "antd"
 
 const ConfigProvider = ({children}) => {
   return (
     <AntdProvider>
-        <App>{children}</App>
+        <AntdApp>{children}</AntdApp>
     </AntdProvider>
 
   )

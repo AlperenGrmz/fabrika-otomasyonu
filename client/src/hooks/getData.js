@@ -1,6 +1,6 @@
 import axios from "axios"
 import { useState, useEffect } from "react";
-//import { BACKEND_API } from "../actions/config";
+import { BACKEND_API } from "../actions/config";
 
 const getData = (url) => {
     const [data, setData] = useState([]);
@@ -12,10 +12,9 @@ const getData = (url) => {
             "Content-Type": "application/json",
         }
     };
-const fakeApi = "https://dummyjson.com/";
     async function fetchData() {
         try {
-            const {data} = await axios.get(`${fakeApi}/${url}`, config)
+            const {data} = await axios.get(`${BACKEND_API}/${url}`, config)
             setData(data);
             setLoading(false);
         } catch (error) {
