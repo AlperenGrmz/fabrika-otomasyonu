@@ -26,14 +26,15 @@ export const addEmployee = (req, res) => {
     req.body.adres,
   ];
 
-  const q =
-    "INSERT INTO calisanlar (adi, soyadi, maas, medeni_durum, tel_no, adres) VALUES (?)";
 
-  db.query(q, [values], (err, data) => {
-    if (data) {
-      res.status(200).json(data);
+  const q =
+    "INSERT INTO calisanlar (adi, soyadi, maas, medeni_durum, tel_no, adres) VALUES (?, ?, ?, ?, ?, ?)";
+
+  db.query(q, values, (err, data) => {
+    if (!err) {
+      return res.status(200).json(data);
     } else {
-      res.status(500).json(err);
+      return res.status(400).json(err);
     }
   });
 };

@@ -36,7 +36,7 @@ export const login = (req, res) => {
             bcrypt.compare(sifre, data[0].sifre, (err, response) => {
                 if(err) return res.json({password: err})
                 if(response) {
-                    const token = jwt.sign({role: data[0].rol}, "jwt-secret-key", {expiresIn: "1d"})
+                    const token = jwt.sign({role: data[0].role_id, calisan_id: data[0].calisan_id}, "jwt-secret-key", {expiresIn: "1d"})
                     return res.json({Status: "Success", Token: token})
                 }else{
                     return res.json({Status: "Email or password invaild"})

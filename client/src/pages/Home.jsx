@@ -1,136 +1,58 @@
-import { Card, Space, Statistic, Table, Typography, Spin } from "antd";
+import React from "react";
+import DataCard from "../components/DataCard";
+import getData from "../hooks/getData";
 import {
-  ShoppingCartOutlined,
-  ShoppingOutlined,
-  TeamOutlined,
+  ShopOutlined,
   UserOutlined,
+  UsergroupAddOutlined,
 } from "@ant-design/icons";
-import { useEffect, useState } from "react";
-import { getOrders } from "../api";
-
-
-
+import { Col, Row, theme } from "antd";
 
 const Home = () => {
+  const employeerData = getData("employeer");
+  const customerData = getData("customer");
+  const orderData = getData("order");
+  const {
+    token: { blue6, orange6, purple6 },
+  } = theme.useToken();
+
+  const statisticData = [
+    {
+      title: "Toplam Çalışan",
+      value: employeerData.data.length,
+      icon: UserOutlined,
+      color: blue6,
+    },
+    {
+      title: "Toplam Müşteri",
+      value: customerData.data.length,
+      icon: UsergroupAddOutlined,
+      color: orange6,
+    },
+    {
+      title: "Toplam Sipariş",
+      value: orderData.data.length,
+      icon: ShopOutlined,
+      color: purple6,
+    },
+  ];
 
   return (
-    <Space size={22} direction="vertical">
-      <Typography.Title level={4}>Home</Typography.Title>
-      <Space direction="horizontal">
-        <HomeCard
-          icon={
-            <ShoppingCartOutlined
-              style={{
-                borderRadius: 20,
-                fontSize: 24,
-                padding: 8,
-              }}
+    <Row gutter={[10, 10]}>
+      {statisticData.map((item, key) => {
+        return (
+          <Col key={key} lg={8} xs={24}>
+            <DataCard
+              color={item.color}
+              icon={item.icon}
+              title={item.title}
+              value={item.value}
             />
-          }
-          title={"Orders"}
-          value={123}
-        />
-        <HomeCard
-          icon={
-            <ShoppingOutlined
-              style={{
-                borderRadius: 20,
-                fontSize: 24,
-                padding: 8,
-              }}
-            />
-          }
-          title={"Inventory"}
-          value={123}
-        />
-        <HomeCard
-          icon={
-            <UserOutlined
-              style={{
-                borderRadius: 20,
-                fontSize: 24,
-                padding: 8,
-              }}
-            />
-          }
-          title={"Customer"}
-          value={123}
-        />
-        <HomeCard
-          icon={
-            <TeamOutlined
-              style={{
-                borderRadius: 20,
-                fontSize: 24,
-                padding: 8,
-              }}
-            />
-          }
-          title={"Employeer"}
-          value={123}
-        />
-      </Space>
-      <Space>
-        <RecentOrder/>
-      </Space>
-    </Space>
+          </Col>
+        );
+      })}
+    </Row>
   );
 };
-
-const HomeCard = ({ title, value, icon }) => {
-  return (
-    <Card>
-      <Space direction="horizontal">
-        {icon}
-        <Statistic title={title} value={value} />
-      </Space>
-    </Card>
-  );
-};
-
-const RecentOrder = () => {
-    const [data, setData] = useState([])
-    const [loading, setLoading] = useState(false)
-
-    useEffect(() => {
-        setLoading(true)
-        getOrders().then((res) => {
-            setData(res.products);
-            setLoading(false)
-        })
-    },[])
-
-    return(
-        <>
-        <Typography.Text>Recent Orders</Typography.Text>
-        <Table 
-        columns={[
-            {
-                title:"Title",
-                dataIndex:"title"
-            },
-            {
-                title:"Quantity",
-                dataIndex:"quantity"
-            },
-            {
-                title:"Price",
-                dataIndex:"discountedPrice"
-            },
-            {
-                title: "Action",
-                render: (data) => {
-                    console.log("data: ",data);
-                return <a>Edit</a>}
-
-            }
-        ]}
-        loading={loading}
-        dataSource={data}
-        pagination={false}
-        ></Table>
-        </>
-    )
-}
 
 export default Home;

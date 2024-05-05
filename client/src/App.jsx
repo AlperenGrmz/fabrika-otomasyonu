@@ -7,7 +7,8 @@ import {BrowserRouter, Routes, Route} from "react-router-dom"
 import Inventory from './pages/Inventory'
 import Orders from './pages/Orders'
 import Login from './pages/auth/Login'
-import Register from './pages/auth/Register'
+import OrderItems from './pages/OrderItems'
+import Production from './pages/Production'
 
 
 function App() {
@@ -17,7 +18,7 @@ function App() {
       <BrowserRouter>
       <Routes path="/">
       <Route index element={<Login />} />
-      <Route path='/register' element={<Register />} />
+      
       </Routes>
         <Routes>
           <Route path="/dashboard" element={<DashboardLayout/>}>
@@ -26,6 +27,8 @@ function App() {
             <Route path='/dashboard/inventory' element={<Inventory/>}/>
             <Route path='/dashboard/orders' element={<Orders/>}/>
             <Route path='/dashboard/customers' element={<Customers/>}/>
+            <Route path='/dashboard/order-items' element={<OrderItems/>}/>
+            <Route path='/dashboard/production' element={<Production/>}/>
           </Route>
         </Routes>
       </BrowserRouter>

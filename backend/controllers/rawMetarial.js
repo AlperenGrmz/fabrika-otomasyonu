@@ -1,30 +1,28 @@
 import { db } from "../db.js";
 
-export const getProducts = (req, res) => {
-  const q = "SELECT * FROM urun";
+export const getRawMetarials = (req, res) => {
+  const q = "SELECT * FROM hammadde";
   db.query(q, (err, data) => {
     if (err) res.status(500).send(err);
     return res.status(200).json(data);
   });
 };
 
-export const getProduct = (req, res) => {
-  const q = "SELECT * FROM urun WHERE id = ?";
+export const getRawMetarial = (req, res) => {
+  const q = "SELECT * FROM hammadde WHERE id = ?";
   db.query(q, [req.params.id], (err, data) => {
     if (err) res.status(500).send(err);
     return res.status(200).json(data);
   });
 };
 
-export const addProduct = (req, res) => {
+export const addRawMetarial = (req, res) => {
   const values = [
-    req.body.adi,
-    req.body.fiyat,
-    req.body.miktar,
+    req.body.adi
   ];
 
   const q =
-    "INSERT INTO urun (adi, fiyat, miktar) VALUES (?)";
+    "INSERT INTO hammadde (adi) VALUES (?)";
 
   db.query(q, [values], (err, data) => {
     if (data) {
@@ -35,15 +33,13 @@ export const addProduct = (req, res) => {
   });
 };
 
-export const updateProduct = (req, res) => {
+export const updateRawMetarial = (req, res) => {
   const q =
-    "UPDATE urun SET `adi`= ?, `fiyat`= ? `miktar` = ? WHERE id = ?";
+    "UPDATE hammadde SET `adi`= ? WHERE id = ?";
 
     const values = [
-        req.body.adi,
-        req.body.fiyat,
-        req.body.miktar,
-    ];
+        req.body.adi
+      ];
 
   db.query(q, [...values, req.params.id], (err, data) => {
     if (err) res.status(500).send(err);
@@ -51,8 +47,8 @@ export const updateProduct = (req, res) => {
   });
 };
 
-export const deleteProduct = (req, res) => {
-  const q = "Delete FROM urun WHERE id = ?";
+export const deleteRawMetarial = (req, res) => {
+  const q = "Delete FROM hammadde WHERE id = ?";
   db.query(q, [req.params.id], (err, data) => {
     if (err) return res.status(500).send(err);
     return res.status(200).json({ Status: "Success" });

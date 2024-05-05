@@ -1,46 +1,45 @@
-import { Button, Table, Typography, theme, Dropdown, Space, Tooltip, Drawer, Modal, Form, Badge, Tag } from "antd";
+import { Button, Table, Typography, theme, Dropdown, Space, Tooltip, Drawer, Modal, Form } from "antd";
 import { DownOutlined, EllipsisOutlined, PlusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import getData from "../hooks/getData";
 import { useContext, useEffect, useState } from "react";
 import mutateData from "../hooks/mutateData";
-import CreateOrderDrawer from "../drawers/CreateOrderDrawer";
+import CreateProductionDrawer from "../drawers/CreateProductionDrawer";
 import { DrawerContext } from "../context/DrawerProvider";
 
 const { Title, Text, Paragraph } = Typography;
 
-const Orders = () => {
-  const { data, loading, error, fetchData } = getData("order");
+const Production = () => {
+  const { data, loading, error, fetchData } = getData("production");
   const [openDrawer, setOpenDrawer] = useState(false);
   const [clickedId, setClickedId] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState({});
   const {submited, toggleCreateButton, forEdit, setForEdit} = useContext(DrawerContext);
   const employeerData = getData("employeer");
-  const customerData = getData("customer");
+  const productData = getData("product");
+  const rawMetarialData = getData("raw-metarial");
 
   let tableData = [];
-data.forEach((element) => {
-  const findEmployee = employeerData.data.find((item) => item.id === element.calisanlar_id);
-  const findCustomer = customerData.data.find((item) => item.id === element.musteri_id);
-
-  let newObj = {
-    key: element.id,
-    id: element.id,
-    calisan_id: element.calisanlar_id,
-    musteri_id: element.musteri_id,
-  }
-
-  if (findEmployee) {
-    newObj.employeeName = findEmployee.adi;
-    newObj.customerName = findCustomer.adi;
-    newObj.customerSurname = findCustomer.soyadi;
-    newObj.customerCompany = findCustomer.firma_adi;
-  }
-
-  tableData.push(newObj);
-})
-
-
+  data.forEach((element) => {
+    const findEmployee = employeerData.data.find((item) => item.id === element.calisan_id);
+    const findProduct = productData.data.find((item) => item.id === element.urun_id);
+    const findRawMetarial = rawMetarialData.data.find((item) => item.id === element.hammade_id)
+    let newObj = {
+        key: element.id,
+        id: element.id,
+        calisan_id: element.calisan_id,
+        urun_id: element.urun_id,
+        uretilen_miktar: element.uretilen_miktar,
+        hammade_id: element.hammade_id,
+    }
+    if (findEmployee) {
+        newObj.employeeName = findEmployee.adi;
+        newObj.productName = findProduct.adi;
+        newObj.rawMetarialName = findRawMetarial.adi;
+    }
+    tableData.push(newObj);
+  })
+ 
 
   useEffect(() => {
     fetchData();
@@ -62,7 +61,7 @@ data.forEach((element) => {
   };
   const handleOk = async () => {
     await mutateData(
-      `order/${clickedId}`, 
+      `production/${clickedId}`, 
       "delete", 
       "application/json")
       fetchData();
@@ -73,6 +72,8 @@ data.forEach((element) => {
   };
 
   const items = [
+   
+   
     {
       label: <a onClick={() => {
        showModal();
@@ -92,31 +93,26 @@ data.forEach((element) => {
       title: "Çalışan Adı",
       dataIndex: "employeeName",
       key: 1,
-  
     },
     {
-      title: "Müşteri Adı",
-      dataIndex: "customerName",
+      title: "Hammadde",
+      dataIndex: "rawMetarialName",
       key: 2,
     },
     {
-      title: "Müşteri Soyadı",
-      dataIndex: "customerSurname",
+      title: "Ürün",
+      dataIndex: "productName",
       key: 3,
+      width: 120,
     },
     {
-      title: "Fabrika Adı",
-      dataIndex: "customerCompany",
+      title: "Uretilen Miktar",
+      dataIndex: "uretilen_miktar",
       key: 4,
-      render: (customerCompany) => {
-        return (
-          <Tag color="blue">{customerCompany}</Tag>            
-        )
-      }
     },
     {
       title: "Action",
-      key: 3,
+      key: 5,
       render: (data) => {
         return (
           <>
@@ -148,7 +144,7 @@ data.forEach((element) => {
   
   return (
     <div>
-      <Tooltip title="Yeni Siparis Ekle" mouseEnterDelay={0.3}>
+      <Tooltip title="Yeni Uretim Ekle" mouseEnterDelay={0.3}>
       <Button style={{
         marginBottom: 10,
       }} size="large" icon={<PlusOutlined  />} onClick={() => {
@@ -161,9 +157,9 @@ data.forEach((element) => {
         danger: true
       }} title="Silmek İstediğinizden Emin misiniz?" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
       </Modal>
-      <CreateOrderDrawer orderData={selectedRow} onClose={onClose} open={openDrawer} />
+      <CreateProductionDrawer productionData={selectedRow} onClose={onClose} open={openDrawer} />
     </div>
   );
 };
 
-export default Orders;
+export default Production;

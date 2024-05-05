@@ -17,21 +17,27 @@ import {
   ShopOutlined,
   ShoppingCartOutlined,
   MenuOutlined,
+  ShoppingOutlined,
+  ToolOutlined
 } from "@ant-design/icons";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import "./layout.css";
 import useScreenSize from "../hooks/useScreenSize";
+import { DrawerContext } from "../context/DrawerProvider";
+import Unauthorized from "../pages/401";
 
 const { Header, Content, Sider } = Layout;
 const { Text } = Typography;
 
 const DashboardLayout = () => {
-  const screenSize = useScreenSize()
+  const {loggedUser} = useContext(DrawerContext);
+  const screenSize = useScreenSize();
   const location = useLocation();
   const navigate = useNavigate();
   const [openMobileMenu, setOpenMobileMenu] = useState(false);
   const [SideMenuOpen, setSideMenuOpen] = useState(false);
+
   const {
     token: {  colorBgContainer },
   } = theme.useToken();
@@ -42,6 +48,8 @@ const DashboardLayout = () => {
   const onClose = () => {
     setOpenMobileMenu(false);
   }
+
+  const token = localStorage.getItem("token");
 
   const headerStyle = {
     height: 80,
@@ -55,7 +63,10 @@ const DashboardLayout = () => {
 
   const items = [
     {
-      label: <a>Çıkış Yap</a>,
+      label: <a onClick={() => {
+        localStorage.removeItem("token");
+        navigate("/");
+      }}>Çıkış Yap</a>,
       key: "0",
       danger: true,
     },
@@ -64,36 +75,52 @@ const DashboardLayout = () => {
   const menuItems = [
     {
       key: "/dashboard",
-      label: "Home",
+      label: "Ana sayfa",
       onClick: () => navigate("/dashboard"),
       icon: <HomeOutlined />,
     },
     {
       key: "/dashboard/employee",
-      label: "Employer",
+      label: "Calısanlar",
       onClick: () => navigate("/dashboard/employee"),
       icon: <TeamOutlined />,
     },
     {
+      key: "/dashboard/customers",
+      onClick: () => navigate("/dashboard/customers"),
+      label: "Musteriler",
+      icon: <UserOutlined />,
+    },
+    {
       key: "/dashboard/inventory",
-      label: "Inventory",
+      label: "Urunler",
       onClick: () => navigate("/dashboard/inventory"),
       icon: <ShopOutlined />,
     },
     {
       key: "/dashboard/orders",
-      label: "Orders",
+      label: "Siparisler",
       onClick: () => navigate("/dashboard/orders"),
       icon: <ShoppingCartOutlined />,
     },
     {
-      key: "/dashboard/customers",
-      onClick: () => navigate("/dashboard/customers"),
-      label: "Customers",
-      icon: <UserOutlined />,
+      key: "/dashboard/order-items",
+      label: "Siparis İcerik",
+      onClick: () => navigate("/dashboard/order-items"),
+      icon: <ShoppingOutlined />,
+    },
+    {
+      key: "/dashboard/production",
+      onClick: () => navigate("/dashboard/production"),
+      label: "Uretim",
+      icon: <ToolOutlined />,
     },
   ];
-
+  if(!token){
+    return (
+      <Unauthorized/>
+    );
+  }
   return (
     <Layout>
       <Header style={{ ...headerStyle, backgroundColor: colorBgContainer }}>
@@ -131,7 +158,7 @@ const DashboardLayout = () => {
                 onClick={(e) => e.preventDefault()}
               >
                 <Space>
-                  User Name
+                  {loggedUser}
                   <DownOutlined />
                 </Space>
               </Text>

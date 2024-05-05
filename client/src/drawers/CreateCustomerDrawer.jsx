@@ -6,7 +6,7 @@ import { DrawerContext } from "../context/DrawerProvider";
 
 const { TextArea } = Input;
 
-const CreateEmployeeDrawer = ({ employeeData, onClose, open }) => {
+const CreateCustomerDrawer = ({ customerData, onClose, open }) => {
   const { toggleSubmit, createButtonClicked, forEdit, setForEdit, showNotification } =
     useContext(DrawerContext);
 
@@ -17,45 +17,39 @@ const CreateEmployeeDrawer = ({ employeeData, onClose, open }) => {
   useEffect(() => {
     if (forEdit) {
       formik.setValues({
-        ad: employeeData.adi,
-        soyad: employeeData.soyadi,
-        adres: employeeData.adres,
-        maas: employeeData.maas,
-        medeni_durum: employeeData.medeni_durum,
-        tel: employeeData.tel_no,
+        ad: customerData.adi,
+        soyad: customerData.soyadi,
+        firma_adi: customerData.firma_adi,
+        firma_adres: customerData.firma_adres
       });
     }
 
     console.log("ad:", formik.values.ad);
-  }, [employeeData, forEdit]);
+  }, [customerData, forEdit]);
 
   const handleSubmit = async (values) => {
     await mutateData(
-      forEdit ? `employeer/${employeeData.id}` : "employeer",
+      forEdit ? `customer/${customerData.id}` : "customer",
       forEdit ? "put" : "post",
       {
         adi: values.ad,
         soyadi: values.soyad,
-        maas: values.maas.toString(),
-        medeni_durum: values.medeni_durum,
-        tel_no: values.tel,
-        adres: values.adres,
+        firma_adi: values.firma_adi,
+        firma_adres: values.firma_adres,
       },
       "application/json"
     );
     toggleSubmit();
+    showNotification("Yeni Müşteri Eklendi")
     formik.setValues(formik.initialValues);
-    showNotification("Müsteri eklendi")
   };
 
   const formik = useFormik({
     initialValues: {
       ad: "",
       soyad: "",
-      maas: null,
-      medeni_durum: "",
-      tel: "",
-      adres: "",
+      firma_adi: "",
+      firma_adres: "",
     },
     onSubmit: handleSubmit,
   });
@@ -63,7 +57,7 @@ const CreateEmployeeDrawer = ({ employeeData, onClose, open }) => {
   return (
     <Drawer
       width={"50%"}
-      title={forEdit ? "Çalışan Kaydını Güncelle" : "Yeni Çalışan Kaydı"}
+      title={forEdit ? "Musteri Kaydını Güncelle" : "Yeni Musteri Kaydı"}
       onClose={() => {
         onClose();
         setForEdit(false);
@@ -117,61 +111,28 @@ const CreateEmployeeDrawer = ({ employeeData, onClose, open }) => {
               value={formik.values.soyad}
             />
           </Form.Item>
-
-          <Form.Item htmlFor="maas" label="Maaş">
-            <InputNumber
-              min={0}
+          <Form.Item htmlFor="firma_adi" label="Firma Adı">
+            <Input
               style={{
                 width: "100%",
               }}
-              addonAfter="₺"
-              name="maas"
-              type="number"
-              onChange={(e) => formik.setFieldValue("maas", e)}
-              value={formik.values.maas}
+              name="firma_adi"
+              type="text"
+              onChange={formik.handleChange}
+              value={formik.values.firma_adi}
             />
           </Form.Item>
-          <Form.Item htmlFor="medeni_durum" label="Medeni Durum">
-            <Select
-              style={{
-                width: "100%",
-              }}
-              name="medeni_durum"
-              options={[
-                {
-                  title: "Evli",
-                  value: "Evli",
-                },
-                {
-                  title: "Bekar",
-                  value: "Bekar",
-                },
-              ]}
-              onChange={(e) => formik.setFieldValue("medeni_durum", e)}
-              value={formik.values.medeni_durum}
-            />
-          </Form.Item>
-          <Form.Item htmlFor="tel" label="Tel No">
-            <Input.OTP
-              length={10}
-              style={{}}
-              name="tel"
-              type="number"
-              onChange={(e) => formik.setFieldValue("tel", e)}
-              value={formik.values.tel}
-            />
-          </Form.Item>
-          <Form.Item htmlFor="adres" label="Adres">
+          <Form.Item htmlFor="firma_adres" label="Firma Adres">
             <TextArea
-              maxLength={200}
+              maxLength={250}
               showCount
               style={{
                 width: "100%",
               }}
-              name="adres"
+              name="firma_adres"
               type="text"
               onChange={formik.handleChange}
-              value={formik.values.adres}
+              value={formik.values.firma_adres}
             />
           </Form.Item>
         </Form>
@@ -180,4 +141,4 @@ const CreateEmployeeDrawer = ({ employeeData, onClose, open }) => {
   );
 };
 
-export default CreateEmployeeDrawer;
+export default CreateCustomerDrawer;
