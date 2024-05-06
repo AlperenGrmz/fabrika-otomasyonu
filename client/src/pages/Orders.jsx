@@ -1,5 +1,23 @@
-import { Button, Table, Typography, theme, Dropdown, Space, Tooltip, Drawer, Modal, Form, Badge, Tag } from "antd";
-import { DownOutlined, EllipsisOutlined, PlusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  Button,
+  Table,
+  Typography,
+  theme,
+  Dropdown,
+  Space,
+  Tooltip,
+  Drawer,
+  Modal,
+  Form,
+  Badge,
+  Tag,
+} from "antd";
+import {
+  DownOutlined,
+  EllipsisOutlined,
+  PlusCircleOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
 import getData from "../hooks/getData";
 import { useContext, useEffect, useState } from "react";
 import mutateData from "../hooks/mutateData";
@@ -14,58 +32,58 @@ const Orders = () => {
   const [clickedId, setClickedId] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState({});
-  const {submited, toggleCreateButton, forEdit, setForEdit} = useContext(DrawerContext);
+  const { submited, toggleCreateButton, forEdit, setForEdit } =
+    useContext(DrawerContext);
   const employeerData = getData("employeer");
   const customerData = getData("customer");
 
   let tableData = [];
-data.forEach((element) => {
-  const findEmployee = employeerData.data.find((item) => item.id === element.calisanlar_id);
-  const findCustomer = customerData.data.find((item) => item.id === element.musteri_id);
+  data.forEach((element) => {
+    const findEmployee = employeerData.data.find(
+      (item) => item.id === element.calisanlar_id
+    );
+    const findCustomer = customerData.data.find(
+      (item) => item.id === element.musteri_id
+    );
 
-  let newObj = {
-    key: element.id,
-    id: element.id,
-    calisan_id: element.calisanlar_id,
-    musteri_id: element.musteri_id,
-  }
+    let newObj = {
+      key: element.id,
+      id: element.id,
+      calisan_id: element.calisanlar_id,
+      musteri_id: element.musteri_id,
+    };
 
-  if (findEmployee) {
-    newObj.employeeName = findEmployee.adi;
-    newObj.customerName = findCustomer.adi;
-    newObj.customerSurname = findCustomer.soyadi;
-    newObj.customerCompany = findCustomer.firma_adi;
-  }
+    if (findEmployee) {
+      newObj.employeeName = findEmployee.adi;
+      newObj.customerName = findCustomer.adi;
+      newObj.customerSurname = findCustomer.soyadi;
+      newObj.customerCompany = findCustomer.firma_adi;
+    }
 
-  tableData.push(newObj);
-})
-
-
+    tableData.push(newObj);
+  });
 
   useEffect(() => {
     fetchData();
-  }, [submited])
+  }, [submited]);
 
   const {
     token: { colorPrimary },
   } = theme.useToken();
 
   const showDrawer = () => {
-    setOpenDrawer(true)
-  }
+    setOpenDrawer(true);
+  };
   const onClose = () => {
-    setOpenDrawer(false)
-  }
+    setOpenDrawer(false);
+  };
 
   const showModal = () => {
     setIsModalOpen(true);
   };
   const handleOk = async () => {
-    await mutateData(
-      `order/${clickedId}`, 
-      "delete", 
-      "application/json")
-      fetchData();
+    await mutateData(`order/${clickedId}`, "delete", "application/json");
+    fetchData();
     setIsModalOpen(false);
   };
   const handleCancel = () => {
@@ -74,11 +92,17 @@ data.forEach((element) => {
 
   const items = [
     {
-      label: <a onClick={() => {
-       showModal();
-        }}>Sil</a>,
+      label: (
+        <a
+          onClick={() => {
+            showModal();
+          }}
+        >
+          Sil
+        </a>
+      ),
       key: 1,
-      danger: true
+      danger: true,
     },
   ];
 
@@ -92,7 +116,6 @@ data.forEach((element) => {
       title: "Çalışan Adı",
       dataIndex: "employeeName",
       key: 1,
-  
     },
     {
       title: "Müşteri Adı",
@@ -109,10 +132,8 @@ data.forEach((element) => {
       dataIndex: "customerCompany",
       key: 4,
       render: (customerCompany) => {
-        return (
-          <Tag color="blue">{customerCompany}</Tag>            
-        )
-      }
+        return <Tag color="blue">{customerCompany}</Tag>;
+      },
     },
     {
       title: "Action",
@@ -125,43 +146,62 @@ data.forEach((element) => {
                 items,
               }}
               trigger={["click"]}
-            > 
-                <Button onClick={(e) => {e.preventDefault()
-                setClickedId(data.id)
-                setSelectedRow(data)
-                }} ghost>
-                <Space>
-              <EllipsisOutlined
-                style={{
-                  color: colorPrimary,
+            >
+              <Button
+                onClick={(e) => {
+                  e.preventDefault();
+                  setClickedId(data.id);
+                  setSelectedRow(data);
                 }}
-              />
+                ghost
+              >
+                <Space>
+                  <EllipsisOutlined
+                    style={{
+                      color: colorPrimary,
+                    }}
+                  />
                 </Space>
-            </Button>
-              
+              </Button>
             </Dropdown>
           </>
         );
       },
     },
   ];
-  
+
   return (
     <div>
       <Tooltip title="Yeni Siparis Ekle" mouseEnterDelay={0.3}>
-      <Button style={{
-        marginBottom: 10,
-      }} size="large" icon={<PlusOutlined  />} onClick={() => {
-        toggleCreateButton();
-        showDrawer();
-      }} />
+        <Button
+          style={{
+            marginBottom: 10,
+          }}
+          size="large"
+          icon={<PlusOutlined />}
+          onClick={() => {
+            toggleCreateButton();
+            showDrawer();
+          }}
+        />
       </Tooltip>
       <Table columns={columns} dataSource={tableData} loading={loading} />
-      <Modal cancelText="Vazgeç" okText="Sil" okButtonProps={{
-        danger: true
-      }} title="Silmek İstediğinizden Emin misiniz?" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-      </Modal>
-      <CreateOrderDrawer orderData={selectedRow} onClose={onClose} open={openDrawer} />
+      <Modal
+        cancelText="Vazgeç"
+        okText="Sil"
+        okButtonProps={{
+          danger: true,
+        }}
+        title="Silmek İstediğinizden Emin misiniz?"
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      ></Modal>
+      <CreateOrderDrawer
+        orderData={selectedRow}
+        onClose={onClose}
+        open={openDrawer}
+      />
     </div>
   );
 };

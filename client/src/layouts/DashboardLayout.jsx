@@ -26,18 +26,19 @@ import "./layout.css";
 import useScreenSize from "../hooks/useScreenSize";
 import { DrawerContext } from "../context/DrawerProvider";
 import Unauthorized from "../pages/401";
+import getData from "../hooks/getData";
 
 const { Header, Content, Sider } = Layout;
 const { Text } = Typography;
 
 const DashboardLayout = () => {
-  const {loggedUser} = useContext(DrawerContext);
+  //const {loggedUser} = useContext(DrawerContext);
   const screenSize = useScreenSize();
   const location = useLocation();
   const navigate = useNavigate();
   const [openMobileMenu, setOpenMobileMenu] = useState(false);
   const [SideMenuOpen, setSideMenuOpen] = useState(false);
-
+  let loggedUser = localStorage.getItem("usermail");
   const {
     token: {  colorBgContainer },
   } = theme.useToken();
@@ -65,6 +66,7 @@ const DashboardLayout = () => {
     {
       label: <a onClick={() => {
         localStorage.removeItem("token");
+        localStorage.removeItem("usermail");
         navigate("/");
       }}>Çıkış Yap</a>,
       key: "0",

@@ -27,7 +27,8 @@ const Login = () => {
     if (loginRes.data.Status === "Success") {
       console.log('res:', loginRes);
       localStorage.setItem("token", loginRes.data.Token);
-      setLoggedUser(`${values.email}`)
+      setLoggedUser(`${values.email}`);
+      localStorage.setItem("usermail", values.email);
       navigate("/dashboard");
     }else {
       notification.error({
