@@ -61,6 +61,11 @@ Proje, sunucu ve istemci olmak üzere iki ana bölümden oluşmaktadır.
 - Kullanıcı oturum açılması.
 - Kullanıcıların belirli öğeleri listeleme ve detaylarını görüntüleme.
 - CRUD işlemleri (Oluşturma, Okuma, Güncelleme, Silme) için API'ler.
+### Giriş Yap Ekaranı
+<img title="a title" alt="Alt text" src="/img/girisyap.png">
+
+### Ekleme ve Düzenleme Ekaranı
+<img title="a title" alt="Alt text" src="/img/calısan ekle.png">
 
 ## SQL Tabloları
 
